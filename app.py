@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
 import sys
 import requests
 
@@ -44,31 +43,36 @@ class QPanelEmployees(QWidget):
 
     def initUI(self):
         self.layout = QVBoxLayout()
+        self.employee_layout = QVBoxLayout()
+        self.layout.addLayout(self.employee_layout)
         self.update_employee()
 
+        spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
         btn_layout = QHBoxLayout()
-        btn_first = QPushButton('First')
+        btn_first = QPushButton('Primero')
         btn_first.clicked.connect(self.first)
-        btn_previous = QPushButton('Previous')
+        btn_previous = QPushButton('Anterior')
         btn_previous.clicked.connect(self.previous)
-        btn_next = QPushButton('Next')
+        btn_next = QPushButton('Siguiente')
         btn_next.clicked.connect(self.next_one)
-        btn_last = QPushButton('Last')
+        btn_last = QPushButton('Ultimo')
         btn_last.clicked.connect(self.last_one)
         btn_layout.addWidget(btn_first)
         btn_layout.addWidget(btn_previous)
         btn_layout.addWidget(btn_next)
         btn_layout.addWidget(btn_last)
 
+        self.layout.addItem(spacer)
         self.layout.addLayout(btn_layout)
         self.setLayout(self.layout)
 
     def update_employee(self):
-        for i in reversed(range(self.layout.count())): 
-            widget = self.layout.itemAt(i).widget()
+        for i in reversed(range(self.employee_layout.count())): 
+            widget = self.employee_layout.itemAt(i).widget()
             if widget is not None:  # check if widget exists before removing it
                 widget.setParent(None)
-        self.layout.addWidget(self.employees[self.index])
+        self.employee_layout.addWidget(self.employees[self.index])
 
     def next_one(self):
         if self.index < len(self.employees) - 1:
@@ -118,6 +122,7 @@ def main():
     employees = create_employees(data)
     qemployees = create_qemployees(employees)
     panel = QPanelEmployees(qemployees)
+    panel.setWindowTitle("Empleados Examen Final Jorge Parra 13104")  # Set the window title here
     panel.show()
     sys.exit(app.exec_())
 
